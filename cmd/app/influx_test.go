@@ -63,9 +63,15 @@ func Test_write_event_with_line_protocol(t *testing.T) {
 			},
 			f: func(c influxdb2.Client, datas []ThermostatSetting) {
 				// Send all the data to the DB
-				for _, data := range datas {
-					for i := 0; i < 10; i++ {
-						writeEventWithLineProtocol(c, data)
+				for {
+					for _, data := range datas {
+						for i := 0; i < 10; i++ {
+							d := data
+							d.avg += float64(i)
+							d.max += float64(i)
+							writeEventWithLineProtocol(c, d)
+							writeEventWithFluentStyle(c, d)
+						}
 					}
 				}
 			},
