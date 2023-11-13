@@ -3,11 +3,12 @@ package main
 import (
 	"context"
 	"fmt"
+	"testing"
+
 	influxdb2 "github.com/influxdata/influxdb-client-go/v2"
 	"github.com/influxdata/influxdb-client-go/v2/domain"
 	"github.com/joho/godotenv"
 	"github.com/stretchr/testify/require"
-	"testing"
 )
 
 func Test_connectToInfluxDB(t *testing.T) {
