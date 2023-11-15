@@ -3,11 +3,12 @@ package main
 import (
 	"context"
 	"fmt"
+	"testing"
+
 	influxdb2 "github.com/influxdata/influxdb-client-go/v2"
 	"github.com/influxdata/influxdb-client-go/v2/domain"
 	"github.com/joho/godotenv"
 	"github.com/stretchr/testify/require"
-	"testing"
 )
 
 func Test_connectToInfluxDB(t *testing.T) {
@@ -67,8 +68,8 @@ func Test_write_event_with_line_protocol(t *testing.T) {
 					for _, data := range datas {
 						for i := 0; i < 10; i++ {
 							d := data
-							d.avg += float64(i)
-							d.max += float64(i)
+							d.avg = d.avg * float64(i)
+							d.max = d.max * float64(i)
 							writeEventWithLineProtocol(c, d)
 							writeEventWithFluentStyle(c, d)
 						}
@@ -104,15 +105,15 @@ func initTestdb(t *testing.T) influxdb2.Client {
 	ctx := context.Background()
 	bucketsAPI := client.BucketsAPI()
 	dBucket, err := bucketsAPI.FindBucketByName(ctx, bucket)
-	if err == nil {
+	if err != nil {
 		err := client.BucketsAPI().DeleteBucketWithID(context.Background(), *dBucket.Id)
 		require.NoError(t, err, "Error deleting bucket")
-	}
 
-	// create new empty bucket
-	dOrg, _ := client.OrganizationsAPI().FindOrganizationByName(ctx, org)
-	_, err = client.BucketsAPI().CreateBucketWithNameWithID(ctx, *dOrg.Id, bucket)
-	require.NoError(t, err, "Error creating bucket")
+		// create new empty bucket
+		dOrg, _ := client.OrganizationsAPI().FindOrganizationByName(ctx, org)
+		_, err = client.BucketsAPI().CreateBucketWithNameWithID(ctx, *dOrg.Id, bucket)
+		require.NoError(t, err, "Error creating bucket")
+	}
 
 	return client
 }

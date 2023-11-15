@@ -2,8 +2,9 @@ package main
 
 import (
 	"fmt"
-	influxdb2 "github.com/influxdata/influxdb-client-go/v2"
 	"time"
+
+	influxdb2 "github.com/influxdata/influxdb-client-go/v2"
 )
 
 type ThermostatSetting struct {
