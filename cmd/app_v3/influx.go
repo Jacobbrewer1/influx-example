@@ -6,11 +6,6 @@ import (
 	"os"
 )
 
-var (
-	bucket string
-	org    string
-)
-
 // Connect to an Influx Database reading the credentials from
 // environment variables INFLUXDB_TOKEN, INFLUXDB_URL
 // return influxdb Client or errors
